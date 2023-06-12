@@ -28,8 +28,8 @@
     - name: Clone Git repository
       git:
         repo: https://github.com/oryaeer/flask.git
-        dest: /home/ec2-user/Desktop/Git
-        version: master
+        dest: /home/ec2-user/Git
+
 
     - name: Install Python and pip
       package:
@@ -51,10 +51,18 @@
     - name: Create Flask systemd service
       template:
         src: templates/flask.service.j2
-        dest: /etc/systemd/system/flask.service
+        dest: /etc/systemd/system/flaskapp.service
 
-    - name: Start and enable Flask service
-      service:
-        name: flask
-        state: started
-        enabled: true
+    - name: Reload systemd daemon
+      become: true
+      command: sudo systemctl daemon-reload
+
+    - name: Start Flask App service
+      become: true
+      command: sudo systemctl start flaskapp.service
+    
+    - name: Enable Flask App service on boot
+      become: true
+      command: sudo systemctl enable flaskapp.service
+
+
