@@ -1,0 +1,60 @@
+---
+- name: Install SSH, Apache, Python, Flask, and Clone Git repository
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install SSH server
+      package:
+        name: openssh-server
+        state: present
+
+    - name: Install Apache HTTP Server (httpd)
+      package:
+        name: httpd
+        state: present
+
+    - name: Start and enable Apache service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Install Git
+      package:
+        name: git
+        state: present
+
+    - name: Clone Git repository
+      git:
+        repo: https://github.com/oryaeer/flask.git
+        dest: /home/ec2-user/Desktop/Git
+        version: master
+
+    - name: Install Python and pip
+      package:
+        name:
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Install Flask
+      pip:
+        name: flask
+        state: present
+
+    - name: Install Gunicorn
+      pip:
+        name: gunicorn
+        state: present
+
+    - name: Create Flask systemd service
+      template:
+        src: templates/flask.service.j2
+        dest: /etc/systemd/system/flask.service
+
+    - name: Start and enable Flask service
+      service:
+        name: flask
+        state: started
+        enabled: true
