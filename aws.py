@@ -1,8 +1,7 @@
 import boto3
 
 # AWS credentials (ensure you have appropriate access)
-aws_access_key_id = 'AKIAZWNUHHB4B3XBLDGC'
-aws_secret_access_key = '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'
+
 region_name = 'us-east-1'
 
 ec2_client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
